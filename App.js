@@ -13,6 +13,7 @@ import {
 import style from "./stylesheet/app.stylesheet.js";
 import Loginscreen from "./components/landingPage"
 import Registerscreen from "./components/registerPage"
+import Lapakregisterscreen from "./components/daftarLapak"
 const Stack = createStackNavigator();
 
 
@@ -21,7 +22,8 @@ export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name="Login" component={Registerscreen} />
+      <Stack.Screen name="LapakRegister" component={Registerscreen} />
+      <Stack.Screen name="Login" component={Loginscreen} />
       <Stack.Screen name="Register" component={Registerscreen} />
     </Stack.Navigator>
   </NavigationContainer>

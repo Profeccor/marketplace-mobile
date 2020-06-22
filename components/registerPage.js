@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity,Button } from "react-native";
+import { View, Text, TouchableOpacity,Button, Keyboard } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { RadioButton } from "react-native-paper";
@@ -19,10 +19,11 @@ export default function registerPage() {
   const [date, setDate] = useState(new Date(1598051730000));
   const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedDate) => {
+  const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
+    console.log(date)
     
   };
 
@@ -55,6 +56,15 @@ export default function registerPage() {
   };
   return (
     <View>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          onChange={()=>{
+            handleDateChange()
+          }}
+        />
+      )}
       <TextInput
         placeholder="Nama"
         style={style.inputForm}
@@ -123,6 +133,12 @@ export default function registerPage() {
         />
         <Text>Perempuan</Text>
       </RadioButton.Group>
+      <TextInput 
+      placeholder="xdxddxxd"
+      onFocus={(event)=>{
+        event.preventDefault()
+        Keyboard.dismiss()
+        console.log("dxdd")}}></TextInput>
       <TextInput placeholder="Tggl Lahir">
         {nama}
         {nomer}
@@ -131,6 +147,7 @@ export default function registerPage() {
         {password}
         {passwordOK}
         {checked}
+        {JSON.stringify(date.getMonth())}
       </TextInput>
       <TouchableOpacity
         style={style.loginbtn}
@@ -152,13 +169,7 @@ export default function registerPage() {
         <Text style={[{ textAlign: "center" }]}>Daftar</Text>
       </TouchableOpacity>
       
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          onChange={onChange}
-        />
-      )}
+      
     </View>
   );
 }
