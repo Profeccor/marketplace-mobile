@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import * as SecureStorage from "expo-secure-store";
 import axios from "../api/axios";
-import {
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import style from "../stylesheet/app.stylesheet.js";
+import { useSelector, useDispatch } from "react-redux";
+import { showNotif, notifText } from "../store/actions";
+import Notif from "../components/notif";
 
-export default function Loginscreen({navigation}) {
+export default function Loginscreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [notification, setNotification] = useState(false);
-  const [notificationText, setNotificationText] = useState("");
+  const notifRedux = useSelector((state) => state.shownotification);
+  const dispatch = useDispatch();
   const handleLogin = async () => {
     try {
       const response = await axios({
@@ -24,12 +22,13 @@ export default function Loginscreen({navigation}) {
           password: password,
         },
       });
+
       SecureStorage.setItemAsync("accesstoken", response.data.accessToken)
         .then(() => {
           return SecureStorage.getItemAsync("accesstoken");
         })
         .then((token) => {
-          //ganati halaman
+          //ganti halaman
           console.log(token);
         })
         .catch((err) => {
@@ -37,13 +36,15 @@ export default function Loginscreen({navigation}) {
         });
     } catch (err) {
       console.log(err.response.data);
-      setNotification(true);
-      setNotificationText(err.response.data.msg);
+      dispatch(showNotif(true));
+      dispatch(notifText(err.response.data.msg));
     }
   };
-
+  
   return (
     <View style={style.container}>
+    {notifRedux == true && <Notif></Notif>}
+      <Text>Email</Text>
       <TextInput
         style={style.inputForm}
         placeholder="Email"
@@ -51,27 +52,15 @@ export default function Loginscreen({navigation}) {
           setEmail(emailform);
         }}
       />
+      <Text>Password</Text>
       <TextInput
         style={style.inputForm}
         placeholder="Password"
+        secureTextEntry={true}
         onChangeText={(passwordform) => {
           setPassword(passwordform);
         }}
       />
-      {notification == true && (
-        <View>
-          <Text style={style.text}>{notificationText}</Text>
-          <TouchableOpacity
-            style={style.loginbtn}
-            color="#fff"
-            onPress={() => {
-              setNotification(false);
-            }}
-          >
-            <Text style={[{ textAlign: "center" }]}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      )}
 
       <TouchableOpacity
         style={style.loginbtn}
@@ -83,14 +72,15 @@ export default function Loginscreen({navigation}) {
         <Text style={[{ textAlign: "center" }]}>Login</Text>
       </TouchableOpacity>
       <Text>
-        Belum punya akun? 
+        Belum punya akun?
         <Text
           onPress={() => {
             navigation.navigate("Register");
           }}
           style={{ color: "blue" }}
         >
-        {" "}Daftar Sekarang!
+          {" "}
+          Daftar Sekarang!
         </Text>
       </Text>
     </View>
