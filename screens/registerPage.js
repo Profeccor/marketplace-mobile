@@ -1,10 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity,Button, Keyboard } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Keyboard,
+  ScrollView,
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { RadioButton } from "react-native-paper";
 import style from "../stylesheet/app.stylesheet.js";
 import axios from "../api/axios.js";
+
+import Notif from "../components/notif";
+
+import { useSelector, useDispatch } from "react-redux";
+import { showNotif, notifText } from "../store/actions/index.js";
 
 export default function registerPage() {
   const [nama, setNama] = useState("");
@@ -14,28 +25,25 @@ export default function registerPage() {
   const [password, setPassword] = useState("");
   const [passwordOK, setPasswordOK] = useState("");
   const [checked, setChecked] = useState("");
+  const dispatch = useDispatch();
+  const notifRedux = useSelector((state) => state.shownotification);
 
   //date picker
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-    console.log(date)
+  const handleDateChange = async (event, selectedDate) => {
     
+    setShow(Platform.OS === "ios");
+    await setDate(selectedDate);
   };
-
-
-  
-//handler
+  //handler
   const handleDaftar = async () => {
     if (password != passwordOK) {
-      setNama("password mu gk sesuai woi goblok");
+      dispatch(showNotif(true));
+      dispatch(notifText("Password anda tidak sesuai"));
     } else {
       try {
-        setTnggl(new Date());
         const response = await axios({
           method: "post",
           url: "/accounts/signup",
@@ -49,22 +57,26 @@ export default function registerPage() {
             tnggl_lhr: date,
           },
         });
+        console.log(response)
       } catch (err) {
-        console.log(err.response.data);
+        console.log(err.response);
+        // dispatch(showNotif(true));
+        // dispatch(notifText(err.response.data));
       }
     }
   };
   return (
-    <View>
+    <ScrollView>
       {show && (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
-          onChange={()=>{
-            handleDateChange()
+          onChange={(event,selectedDate) => {
+            handleDateChange(event,selectedDate);
           }}
         />
       )}
+      {notifRedux == true && <Notif />}
       <TextInput
         placeholder="Nama"
         style={style.inputForm}
@@ -133,27 +145,21 @@ export default function registerPage() {
         />
         <Text>Perempuan</Text>
       </RadioButton.Group>
-      <TextInput 
-      placeholder="xdxddxxd"
-      onFocus={(event)=>{
-        event.preventDefault()
-        Keyboard.dismiss()
-        console.log("dxdd")}}></TextInput>
-      <TextInput placeholder="Tggl Lahir">
-        {nama}
-        {nomer}
-        {email}
-        {alamat}
-        {password}
-        {passwordOK}
-        {checked}
-        {JSON.stringify(date.getMonth())}
-      </TextInput>
+      <TextInput
+        placeholder="xdxddxxd"
+        onFocus={(event) => {
+          event.preventDefault();
+          Keyboard.dismiss();
+        }}
+      ></TextInput>
+      {/* <TextInput placeholder="Tggl Lahir">
+        {JSON.stringify(date)}
+      </TextInput> */}
       <TouchableOpacity
         style={style.loginbtn}
         color="#fff"
         onPress={() => {
-          setShow(true)
+          setShow(true);
         }}
       >
         <Text style={[{ textAlign: "center" }]}>Date Pick</Text>
@@ -168,8 +174,6 @@ export default function registerPage() {
       >
         <Text style={[{ textAlign: "center" }]}>Daftar</Text>
       </TouchableOpacity>
-      
-      
-    </View>
+    </ScrollView>
   );
 }
