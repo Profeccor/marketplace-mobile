@@ -29,6 +29,7 @@ export function Loggingin(email, password) {
       SecureStorage.setItemAsync("accesstoken", response.data.accessToken)
         .then(() => {
           //ganti halaman
+          console.log(response.data.accessToken)
         })
         .catch((err) => {
           console.log(err);

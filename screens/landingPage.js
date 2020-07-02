@@ -11,7 +11,7 @@ export default function Loginscreen({ navigation }) {
   const notifRedux = useSelector((state) => state.shownotification);
   const dispatch = useDispatch();
   const handleLogin = async () => {
-    // await dispatch(Loggingin(email,password))
+     await dispatch(Loggingin(email,password))
      await dispatch(verify())
     
   };

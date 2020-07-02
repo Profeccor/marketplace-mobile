@@ -25,6 +25,7 @@ export default function registerPage() {
   const [password, setPassword] = useState("");
   const [passwordOK, setPasswordOK] = useState("");
   const [checked, setChecked] = useState("");
+  const [allError, setallError] = useState([]);
   const dispatch = useDispatch();
   const notifRedux = useSelector((state) => state.shownotification);
 
@@ -33,7 +34,6 @@ export default function registerPage() {
   const [show, setShow] = useState(false);
 
   const handleDateChange = async (event, selectedDate) => {
-    
     setShow(Platform.OS === "ios");
     await setDate(selectedDate);
   };
@@ -57,11 +57,23 @@ export default function registerPage() {
             tnggl_lhr: date,
           },
         });
-        console.log(response)
+        console.log(response);
       } catch (err) {
-        console.log(err.response);
+        let cleanse = [];
+        err.response.data.errors.forEach((element) => {
+          const berisipath = {
+            path: element.path,
+            message: element.message,
+          };
+         
+          cleanse.push(berisipath);
+        });
+        
+        setallError(cleanse);
+
+        //belum benar
         // dispatch(showNotif(true));
-        // dispatch(notifText(err.response.data));
+        // dispatch(notifText(err.response.data.errors[0].message));
       }
     }
   };
@@ -71,8 +83,8 @@ export default function registerPage() {
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
-          onChange={(event,selectedDate) => {
-            handleDateChange(event,selectedDate);
+          onChange={(event, selectedDate) => {
+            handleDateChange(event, selectedDate);
           }}
         />
       )}
@@ -98,6 +110,7 @@ export default function registerPage() {
           setEmail(p);
         }}
       ></TextInput>
+      {allError.filter((value,index)=>value.path==="email").map((value,index)=><Text key={index}>{value.message}</Text>)}
       <TextInput
         placeholder="Alamat"
         style={style.inputForm}
