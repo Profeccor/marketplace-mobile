@@ -121,3 +121,25 @@ export function registerAct() {
 
   }
 }
+export function getLapakAct(){
+  return async(dispatch)=>{
+    //ganti value URL
+  try {
+    const response = await axios({
+      method: "get",
+      url: "/toko/2",
+    })
+      .then((response) => console.log(response.data))
+      
+      .catch(function (error) {
+        console.log(error);
+      });
+  } catch (error) {
+    console.log(error);
+  }
+}}
+export function registerLapakAct(idToko){
+  return async (dispatch) =>{
+
+  }
+}

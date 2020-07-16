@@ -1,29 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import axios from "../api/axios";
+import {useDispatch} from "react-redux"
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TextInput } from "react-native-paper";
-
+import {getLapakAct} from "../store/actions"
 export default function Lapakscreen({ navigation }) {
   const [test, setTest] = useState("");
   const [item, setItem] = useState([]);
+  const dispatch = useDispatch();
   useEffect(() => {
     getToko();
   }, []);
   const getToko = async () => {
-    try {
-      const response = await axios({
-        method: "get",
-        url: "/toko/2",
-      })
-        .then((response) => console.log(response.data))
-        
-        .catch(function (error) {
-          console.log(error);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    //ganti value URL di action
+    await dispatch (getLapakAct())
   };
   return (
     <View>
