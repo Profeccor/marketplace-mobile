@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as SecureStorage from "expo-secure-store";
 import axios from "../api/axios";
 import { useSelector, useDispatch } from "react-redux";
+import {addProductAct} from "../store/actions"
 
 import { View, Text } from "react-native";
 import { TextInput } from "react-native-paper";
@@ -15,45 +16,11 @@ export default function addProduct({ navigation }) {
   const [kategori, setKategori] = useState("");
   const [harga, setHarga] = useState("");
   const [stock, setStock] = useState("");
-
+  const dispatch = useDispatch();
   const handleTambah = async () => {
-    try {
-      SecureStorage.getItemAsync("accesstoken")
-        .then(async (token) => {
-          const response = await axios({
-            method: "post",
-            url: "/products/",
-            headers: {
-              accesstoken: token,
-            },
-            data: {
-              nama: nama,
-              deskripsi: deskripsi,
-              gambar: gambar,
-              kategori: kategori,
-            },
-          });
-          
-          const responseorder = await axios({
-              method:"post",
-              url:"/orders/",
-              headers:{
-                  accesstoken:token,
-              },
-              data:{
-                  harga:harga,
-                  stock:stock,
-                  productID:response.data.id
-              }
-          })
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(err.response);
-    }
-  };
+   await dispatch (addProductAct(nama,deskripsi,gambar,kategori,harga,stock))
+  
+};
   return (
     <View>
       <Text>Nama</Text>

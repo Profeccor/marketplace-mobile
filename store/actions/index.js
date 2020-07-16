@@ -29,7 +29,7 @@ export function Loggingin(email, password) {
       SecureStorage.setItemAsync("accesstoken", response.data.accessToken)
         .then(() => {
           //ganti halaman
-          console.log(response.data.accessToken)
+          console.log(response.data.accessToken);
         })
         .catch((err) => {
           console.log(err);
@@ -38,6 +38,46 @@ export function Loggingin(email, password) {
       console.log(err.response.data.msg);
       dispatch(showNotif(true));
       dispatch(notifText(err.response.data.msg));
+    }
+  };
+}
+export function addProductAct(nama, deskripsi, gambar, kategori, harga, stock) {
+  return async (dispatch) => {
+    try {
+      SecureStorage.getItemAsync("accesstoken")
+        .then(async (token) => {
+          const response = await axios({
+            method: "post",
+            url: "/products/",
+            headers: {
+              accesstoken: token,
+            },
+            data: {
+              nama: nama,
+              deskripsi: deskripsi,
+              gambar: gambar,
+              kategori: kategori,
+            },
+          });
+
+          const responseorder = await axios({
+            method: "post",
+            url: "/orders/",
+            headers: {
+              accesstoken: token,
+            },
+            data: {
+              harga: harga,
+              stock: stock,
+              productID: response.data.id,
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(err.response);
     }
   };
 }
@@ -51,7 +91,7 @@ export function verify() {
             url: "/auth/verify",
             headers: { accesstoken: token },
           });
-          await dispatch(getInfo(response.data.id))
+          await dispatch(getInfo(response.data.id));
         })
         .catch((err) => {
           console.log(err);
@@ -66,19 +106,18 @@ export function getInfo(id) {
     try {
       const response = await axios({
         method: "get",
-        url: "/accounts/"+id,
-        
+        url: "/accounts/" + id,
       });
-    //   console.log(response.data);
+      //   console.log(response.data);
     } catch (err) {
       console.log(err);
     }
   };
 }
-export function register(){
-    try{
+export function registerAct() {
+  try {
+  
+  } catch {
 
-    }catch{
-
-    }
+  }
 }
