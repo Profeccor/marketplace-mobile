@@ -116,30 +116,54 @@ export function getInfo(id) {
 }
 export function registerAct() {
   try {
-  
-  } catch {
-
-  }
+  } catch {}
 }
-export function getLapakAct(){
-  return async(dispatch)=>{
+export function getLapakAct() {
+  return async (dispatch) => {
     //ganti value URL
-  try {
-    const response = await axios({
-      method: "get",
-      url: "/toko/2",
-    })
-      .then((response) => console.log(response.data))
-      
-      .catch(function (error) {
-        console.log(error);
-      });
-  } catch (error) {
-    console.log(error);
-  }
-}}
-export function registerLapakAct(idToko){
-  return async (dispatch) =>{
+    try {
+      const response = await axios({
+        method: "get",
+        url: "/toko/2",
+      })
+        .then((response) => console.log(response.data))
 
-  }
+        .catch(function (error) {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+export function registerLapakAct(nama, alamat, luas, deskripsi, gambar) {
+  return async (dispatch) => {
+    try {
+      SecureStorage.getItemAsync("accesstoken")
+        .then(async (token) => {
+          const response = await axios({
+            method: "post",
+            url: "/toko/createToko",
+            headers: {
+              accesstoken: token,
+            },
+            data: {
+              nama: nama,
+              alamat: alamat,
+              luas_lahan: luas,
+              deskripsi: deskripsi,
+              gambar: gambar,
+            },
+          });
+          await dispatch(showNotif(true));
+          await dispatch(notifText("Berhasil ditambahkan"));
+        })
+
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err.response);
+    }
+  };
 }

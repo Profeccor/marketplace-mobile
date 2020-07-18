@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import style from "../stylesheet/app.stylesheet.js";
 import { useSelector, useDispatch } from "react-redux";
-import { showNotif, notifText,Loggingin,  verify, getInfo } from "../store/actions";
+import {
+  showNotif,
+  notifText,
+  Loggingin,
+  verify,
+  getInfo,
+} from "../store/actions";
 import Notif from "../components/notif";
 
 export default function Loginscreen({ navigation }) {
@@ -11,14 +17,13 @@ export default function Loginscreen({ navigation }) {
   const notifRedux = useSelector((state) => state.shownotification);
   const dispatch = useDispatch();
   const handleLogin = async () => {
-     await dispatch(Loggingin(email,password))
-     await dispatch(verify())
-    
+    await dispatch(Loggingin(email, password));
+    await dispatch(verify());
   };
-  
+
   return (
     <View style={style.container}>
-    {notifRedux == true && <Notif/>}
+      {notifRedux == true && <Notif />}
       <Text>Email</Text>
       <TextInput
         style={style.inputForm}

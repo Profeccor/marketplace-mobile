@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as SecureStorage from "expo-secure-store";
 import axios from "../api/axios";
 import { useSelector, useDispatch } from "react-redux";
-import { showNotif, notifText } from "../store/actions";
+import { showNotif, notifText,registerLapakAct } from "../store/actions";
 
 
 
@@ -22,33 +22,7 @@ export default function daftarLapak({ navigation }) {
 
   const notifRedux = useSelector ((state)=>state.shownotification)
   const handleDaftar = async () => {
-    try {
-      SecureStorage.getItemAsync("accesstoken")
-        .then(async (token) => {
-          const response = await axios({
-            method: "post",
-            url: "/toko/createToko",
-            headers: {
-              accesstoken: token,
-            },
-            data:{
-              nama:nama,
-              alamat:alamat,
-              luas_lahan:luas,
-              deskripsi:deskripsi,
-              gambar:gambar,
-            }
-          });
-          await dispatch(showNotif(true))
-          await dispatch(notifText("Berhasil ditambahkan"))
-        })
-
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (err) {
-      console.log(err.response);
-    }
+    await dispatch (registerLapakAct(nama,alamat,luas,deskripsi,gambar))
   };
   return (
     <View style={style.container}>
