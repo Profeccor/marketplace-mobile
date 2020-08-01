@@ -18,11 +18,11 @@ export default function App() {
     <Provider store={store}>
     <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name="LapakSaya" component={Lapaksayascreen} />
       <Stack.Screen name="AddProduct" component={Addproductscreen} />
       <Stack.Screen name="Login" component={Loginscreen} />
-      <Stack.Screen name="LapakRegister" component={Lapakregisterscreen} />
       <Stack.Screen name="Register" component={Registerscreen} />
+      <Stack.Screen name="LapakSaya" component={Lapaksayascreen} />
+      <Stack.Screen name="LapakRegister" component={Lapakregisterscreen} />
     </Stack.Navigator>
   </NavigationContainer>
   </Provider>

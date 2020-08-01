@@ -2,7 +2,10 @@ import axios from "../../api/axios";
 import * as SecureStorage from "expo-secure-store";
 export const SHOW_NOTIF = "SHOW_NOTIF";
 export const NOTIF_TEXT = "NOTIF_TEXT";
+export const NAVIGATE = "NAVIGATE";
 export const GET_INFO = "INFO";
+export const CURRENTLAPAK = "CURRENTLAPAK";
+
 export function showNotif(bool) {
   return {
     type: SHOW_NOTIF,
@@ -29,6 +32,7 @@ export function Loggingin(email, password) {
       SecureStorage.setItemAsync("accesstoken", response.data.accessToken)
         .then(() => {
           //ganti halaman
+
           console.log(response.data.accessToken);
         })
         .catch((err) => {
@@ -36,8 +40,10 @@ export function Loggingin(email, password) {
         });
     } catch (err) {
       console.log(err.response.data.msg);
+      console.log("gagal login password salah masuk sini !!!");
       dispatch(showNotif(true));
       dispatch(notifText(err.response.data.msg));
+      throw new Error("Gagal Login");
     }
   };
 }
@@ -101,6 +107,7 @@ export function verify() {
     }
   };
 }
+
 export function getInfo(id) {
   return async (dispatch) => {
     try {
@@ -126,7 +133,9 @@ export function getLapakAct() {
         method: "get",
         url: "/toko/2",
       })
-        .then((response) => console.log(response.data))
+        .then((response) => {
+          dispatch (setCurrentLapak(response.data));
+        })
 
         .catch(function (error) {
           console.log(error);
@@ -165,5 +174,11 @@ export function registerLapakAct(nama, alamat, luas, deskripsi, gambar) {
     } catch (err) {
       console.log(err.response);
     }
+  };
+}
+export function setCurrentLapak(lapak) {
+  return {
+    type: CURRENTLAPAK,
+    payload: lapak,
   };
 }

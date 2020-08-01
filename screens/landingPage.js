@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as SecureStorage from "expo-secure-store"
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import style from "../stylesheet/app.stylesheet.js";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,6 +8,7 @@ import {
   notifText,
   Loggingin,
   verify,
+  logOut,
   getInfo,
 } from "../store/actions";
 import Notif from "../components/notif";
@@ -17,9 +19,22 @@ export default function Loginscreen({ navigation }) {
   const notifRedux = useSelector((state) => state.shownotification);
   const dispatch = useDispatch();
   const handleLogin = async () => {
+    try{
     await dispatch(Loggingin(email, password));
-    await dispatch(verify());
+    navigation.navigate("LapakSaya")
+    }catch(err){
+      console.log(err)
+    }
   };
+  const handleLogout = async()=>{
+    SecureStorage.deleteItemAsync("accesstoken")
+         .then(()=>{
+           navigation.navigate("Register")
+         })
+         .catch((err)=>{
+          console.log(err)
+         })
+  }
 
   return (
     <View style={style.container}>
@@ -50,6 +65,15 @@ export default function Loginscreen({ navigation }) {
         }}
       >
         <Text style={[{ textAlign: "center" }]}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={style.loginbtn}
+        color="#fff"
+        onPress={() => {
+         handleLogout()
+        }}
+      >
+        <Text style={[{ textAlign: "center" }]}>logOut</Text>
       </TouchableOpacity>
       <Text>
         Belum punya akun?

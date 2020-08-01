@@ -1,9 +1,10 @@
-import { SHOW_NOTIF, NOTIF_TEXT, GET_INFO } from "../actions/index";
+import { SHOW_NOTIF, NOTIF_TEXT, GET_INFO, CURRENTLAPAK } from "../actions/index";
 
 const initialState = {
   shownotification: false,
   textnotification: "",
-  currentinfo:""
+  currentinfo:"",
+  currentlapak:{}
   
 };
 export default function reducer(state = initialState, action) {
@@ -14,6 +15,8 @@ export default function reducer(state = initialState, action) {
       return { ...state, textnotification: action.payload };
     case GET_INFO:
       return {...state,currentinfo:action.payload}
+     case CURRENTLAPAK:
+       return {...state,currentlapak:action.payload} 
     default:
       return state;
   }
