@@ -9,7 +9,7 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { RadioButton } from "react-native-paper";
-import style from "../stylesheet/app.stylesheet.js";
+import style from "../stylesheet/daftarakun.stylesheet.js";
 import axios from "../api/axios.js";
 
 import Notif from "../components/notif";
@@ -65,10 +65,10 @@ export default function registerPage() {
             path: element.path,
             message: element.message,
           };
-         
+
           cleanse.push(berisipath);
         });
-        
+
         setallError(cleanse);
 
         //belum benar
@@ -78,9 +78,10 @@ export default function registerPage() {
     }
   };
   return (
-    <ScrollView>
+    <View style={style.container}>
       {show && (
         <DateTimePicker
+        style={[{height:500}]}
           testID="dateTimePicker"
           value={date}
           onChange={(event, selectedDate) => {
@@ -110,7 +111,12 @@ export default function registerPage() {
           setEmail(p);
         }}
       ></TextInput>
-      {allError.filter((value,index)=>value.path==="email").map((value,index)=><Text key={index}>{value.message}</Text>)}
+      {/* <Text style={[{color:"red"}]} >Email sudah tersedia</Text> */}
+      {allError
+        .filter((value, index) => value.path === "email")
+        .map((value, index) => (
+          <Text style={[{color:"red"}]} key={index}>{value.message}</Text>
+        ))}
       <TextInput
         placeholder="Alamat"
         style={style.inputForm}
@@ -134,50 +140,57 @@ export default function registerPage() {
           setPasswordOK(p);
         }}
       ></TextInput>
-
-      <RadioButton.Group
-        onValueChange={(v) => {
-          setChecked(v);
-        }}
-      >
-        <RadioButton
-          value="Laki"
-          status={checked === "Laki" ? "checked" : "unchecked"}
-          onPress={() => {
-            setChecked("Laki");
+      
+      <TouchableOpacity style={style.radiobuttonContainer}>
+        <RadioButton.Group
+          onValueChange={(v) => {
+            setChecked(v);
           }}
-        />
-        <Text>Laki-laki</Text>
+        >
+          <RadioButton
+            style={style.radiobutton}
+            value="Laki"
+            status={checked === "Laki" ? "checked" : "unchecked"}
+            onPress={() => {
+              setChecked("Laki");
+            }}
+          />
+          <Text style={style.textgender}>Laki-laki</Text>
 
-        <RadioButton
-          value="Perempuan"
-          status={checked === "Perempuan" ? "checked" : "unchecked"}
-          onPress={() => {
-            setChecked("Perempuan");
-          }}
-        />
-        <Text>Perempuan</Text>
-      </RadioButton.Group>
-      <TextInput
+          <RadioButton
+            style={style.radiobutton}
+            value="Perempuan"
+            status={checked === "Perempuan" ? "checked" : "unchecked"}
+            onPress={() => {
+              setChecked("Perempuan");
+            }}
+          />
+          <Text style={style.textgender}>Perempuan</Text>
+        </RadioButton.Group>
+      </TouchableOpacity>
+
+      {/* <TextInput
         placeholder="xdxddxxd"
         onFocus={(event) => {
           event.preventDefault();
           Keyboard.dismiss();
         }}
-      ></TextInput>
-      {/* <TextInput placeholder="Tggl Lahir">
-        {JSON.stringify(date)}
-      </TextInput> */}
-      <TouchableOpacity
-        style={style.loginbtn}
-        color="#fff"
+      ></TextInput> */}
+    <TouchableOpacity style={style.dateContainer}>
+    <TouchableOpacity
+        style={style.datebtn}
         onPress={() => {
           setShow(true);
         }}
       >
-        <Text style={[{ textAlign: "center" }]}>Date Pick</Text>
+        <Text style={[{ textAlign: "center" }]}>Tanggal Lahir</Text>
       </TouchableOpacity>
+      <Text style={style.dateString}>
+        {JSON.stringify(date).substring(1, 11)}
+      </Text>
 
+    </TouchableOpacity>
+      
       <TouchableOpacity
         style={style.loginbtn}
         color="#fff"
@@ -186,7 +199,9 @@ export default function registerPage() {
         }}
       >
         <Text style={[{ textAlign: "center" }]}>Daftar</Text>
+
       </TouchableOpacity>
-    </ScrollView>
+      {/* <Text style={[{ textAlign: "center" }]}>AKUN BERHASIL DIDAFTARKAN</Text> */}
+    </View>
   );
 }

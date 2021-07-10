@@ -8,22 +8,24 @@ import * as ImagePicker from "expo-image-picker";
 import { View, Text, Image, Button } from "react-native";
 import { TextInput } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import style from "../stylesheet/app.stylesheet.js";
+import style from "../stylesheet/addproduct.stylesheet.js";
 
 export default function addProduct({ navigation }) {
   const [nama, setNama] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [gambar, setGambar] = useState({});
-  const [selectedImage, setSelectedImage] = useState({});
   const [kategori, setKategori] = useState("");
   const [harga, setHarga] = useState("");
   const [stock, setStock] = useState("");
+  const [pickerss,setpickerssResult]= useState({})
   const dispatch = useDispatch();
   const handleTambah = async () => {
+    console.log("masuk ke handletambah")
     await dispatch(
-      addProductAct(nama, deskripsi, gambar, kategori, harga, stock)
+      addProductAct(nama, deskripsi, gambar.localUri, kategori, harga, stock)
     );
   };
+
 
   //image picker
 
@@ -41,54 +43,66 @@ export default function addProduct({ navigation }) {
     if (pickerResult.cancelled === true) {
       return;
     }
-
+// setpickerssResult(pickerResult)
     setGambar({ localUri: pickerResult.uri });
   };
 
   return (
-    <View>
+    <View style={style.container}>
       <Text>Nama</Text>
-      <TextInput
+      <TextInput style={style.inputForm}
         onChangeText={(value) => {
           setNama(value);
         }}
       ></TextInput>
       <Text>Deskripsi</Text>
-      <TextInput
+      <TextInput style={style.inputForm}
         onChangeText={(value) => {
           setDeskripsi(value);
         }}
       ></TextInput>
       <Text>Kategori</Text>
-      <TextInput
+      <TextInput style={style.inputForm}
         onChangeText={(value) => {
           setKategori(value);
         }}
       ></TextInput>
       <Text>Stock</Text>
+      <TouchableOpacity style={style.baris}>
       <TextInput
+      style={style.inputFormint}
         keyboardType="numeric"
         onChangeText={(value) => {
           setStock(value);
         }}
       ></TextInput>
+      <Text>gram</Text>
+      </TouchableOpacity>
       <Text>Harga</Text>
+      <TouchableOpacity style={style.baris}>
       <TextInput
+      style={style.inputFormint}
         keyboardType="numeric"
         onChangeText={(value) => {
           setHarga(value);
         }}
       ></TextInput>
-      <Text>Gambar</Text>
-      <TouchableOpacity onPress={openImagePickerAsync}>
-        <Text>Pick a photo</Text>
+      <Text>/Kg</Text>
+      </TouchableOpacity>
+      
+      
+      <TouchableOpacity style={style.baris}>
+      <TouchableOpacity style={style.productbtn} onPress={openImagePickerAsync}>
+        <Text>Upload Gambar</Text>
       </TouchableOpacity>
 
       {/* gambar */}
       <Image
         source={{ uri: gambar.localUri }}
-        style={{ width: 50, height: 50 }}
+        style={style.gambar}
       />
+      </TouchableOpacity>
+     
 
       {/* <Image source={{uri: `http://localhost:3000/Product-ce44f349-23c4-4787-bf3b-47e60710d695.png`}}
        style={{width: 50, height: 50}} /> */}
@@ -98,8 +112,9 @@ export default function addProduct({ navigation }) {
           handleTambah();
         }}
       >
-        <Text>tombol</Text>
+        <Text style={[{textAlign:"center"}]}>Add Product</Text>
       </TouchableOpacity>
+      {/* <Text  style={[{textAlign:"center",color:"red"}]}>Terdapat form yang kosong</Text> */}
     </View>
   );
 }

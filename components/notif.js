@@ -3,15 +3,15 @@ import { Text, View, TextInput, TouchableOpacity } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 import { showNotif, notifText } from "../store/actions";
-import style from "../stylesheet/app.stylesheet.js";
+import style from "../stylesheet/notif.stylesheet.js";
 export default function Notif() {
   const dispatch = useDispatch();
   const textRedux = useSelector((state) => state.textnotification);
   return (
     <View>
-      <Text style={style.text}>{textRedux}</Text>
+      <Text>{textRedux}</Text>
       <TouchableOpacity
-        style={style.loginbtn}
+        style={style.closebtn}
         color="#fff"
         onPress={() => {
           dispatch(showNotif(false));
